@@ -3,92 +3,120 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ATL & PVR Countdowns</title>
-<link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
+<title>ATL & PVR Flipboard Countdown</title>
+
+<!-- Load SolariBoard font from same folder -->
 <style>
-  body {
-    font-family: 'Bungee', cursive;
-    background: #222;
-    color: #fff;
-    text-align: center;
-    margin-top: 50px;
-  }
-  .countdown-container {
-    margin-bottom: 40px;
-  }
-  .label {
-    font-size: 2em;
-    margin-bottom: 10px;
-    text-shadow: 2px 2px 5px rgba(0,0,0,0.4);
-  }
-  .ATL {
-    background: linear-gradient(to right, #4facfe, #00f2fe);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .PVR {
-    background: linear-gradient(to right, #fbc2eb, #a6c1ee);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .countdown {
-    font-size: 2em;
-    background: rgba(0,0,0,0.6);
-    padding: 20px;
-    display: inline-block;
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-    transition: transform 0.2s ease-in-out;
-  }
-  .countdown:hover {
-    transform: scale(1.05);
-  }
-  .countdown span {
-    display: inline-block;
-    min-width: 70px;
-  }
+@font-face {
+  font-family: 'SolariBoard';
+  src: url('SolariBoard.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'SolariBoard', monospace;
+  background: #111;
+  color: #fff;
+  text-align: center;
+  padding: 30px;
+}
+
+.countdown-container {
+  margin-bottom: 50px;
+}
+
+.label {
+  font-size: 2em;
+  margin-bottom: 15px;
+}
+
+.flip-clock {
+  display: inline-flex;
+  gap: 5px;
+  justify-content: center;
+}
+
+.flip-digit {
+  position: relative;
+  width: 55px;
+  height: 80px;
+  perspective: 1000px;
+  background: #000;
+  border-radius: 4px;
+  overflow: hidden;
+  color: #ffcc00;
+  font-size: 2.5em;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: inset 0 -2px 5px rgba(0,0,0,0.7), inset 0 2px 5px rgba(255,255,255,0.05);
+}
+
+.digit-top,
+.digit-bottom {
+  position: absolute;
+  width: 100%;
+  height: 50%;
+  overflow: hidden;
+  background: #000;
+  color: #ffcc00;
+  text-shadow: 0 0 5px rgba(255,204,0,0.7);
+  font-family: 'SolariBoard', monospace;
+}
+
+.digit-top {
+  top: 0;
+  border-bottom: 1px solid #333;
+  line-height: 40px;
+}
+
+.digit-bottom {
+  bottom: 0;
+  border-top: 1px solid #333;
+  line-height: 40px;
+}
+
+.digit-flip-front,
+.digit-flip-back {
+  position: absolute;
+  width: 100%;
+  height: 50%;
+  left: 0;
+  background: #000;
+  color: #ffcc00;
+  overflow: hidden;
+  text-shadow: 0 0 5px rgba(255,204,0,0.7);
+  backface-visibility: hidden;
+  font-family: 'SolariBoard', monospace;
+}
+
+.digit-flip-front {
+  top: 0;
+  transform-origin: bottom;
+}
+
+.digit-flip-back {
+  bottom: 0;
+  transform-origin: top;
+}
+
+.flip {
+  animation: flipAnim 0.5s forwards;
+}
+
+@keyframes flipAnim {
+  0% { transform: rotateX(0); }
+  100% { transform: rotateX(-90deg); }
+}
 </style>
 </head>
 <body>
 
 <div class="countdown-container">
-  <div class="label ATL">ATL ✈️</div>
-  <div class="countdown" id="timerATL">Loading...</div>
+  <div class="label">ATL ✈️</div>
+  <div class="flip-clock" id="timerATL"></div>
 </div>
 
 <div class="countdown-container">
-  <div class="label PVR">PVR 🌴🍹</div>
-  <div class="countdown" id="timerPVR">Loading...</div>
-</div>
-
-<script>
-function updateCountdown(targetId, targetYear, targetMonth, targetDay, targetHour, targetMinute) {
-  const now = new Date();
-  const targetDate = new Date(targetYear, targetMonth, targetDay, targetHour, targetMinute, 0);
-  
-  const diff = targetDate.getTime() - now.getTime();
-  let timerEl = document.getElementById(targetId);
-  
-  if (diff <= 0) {
-    timerEl.innerHTML = "Time's up!";
-    return;
-  }
-
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-  const minutes = Math.floor((diff / (1000 * 60)) % 60);
-  const seconds = Math.floor((diff / 1000) % 60);
-
-  timerEl.innerHTML =
-    `<span>${days}d</span> <span>${hours}h</span> 
-     <span>${minutes}m</span> <span>${seconds}s</span>`;
-}
-
-setInterval(() => {
-  updateCountdown("timerATL", 2025, 8, 1, 9, 48);
-  updateCountdown("timerPVR", 2025, 8, 2, 13, 10);
-}, 1000);
-</script>
-
-</body>
-</html>
+  <div class="label">PVR 🌴🍹</div>
+  <div class="
