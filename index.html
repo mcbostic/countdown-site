@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Countdown Timer (EDT DST-Aware)</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    text-align: center;
+    margin-top: 50px;
+  }
+  .countdown {
+    font-size: 2em;
+    background: #222;
+    color: #fff;
+    padding: 20px;
+    display: inline-block;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  }
+  .countdown span {
+    display: inline-block;
+    min-width: 70px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Countdown to September 2, 2025 @ 13:10 EDT</h1>
+<div class="countdown" id="timer">
+  Loading...
+</div>
+
+<script>
+function updateCountdown() {
+  // Use America/New_York timezone for automatic DST adjustment
+  const targetDate = new Date(
+    new Date().toLocaleString("en-US", {
+      timeZone: "America/New_York",
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric"
+    })
+  );
+  
+  // Manually set target to 2025-09-02 13:10 in New York time
+  targetDate.setFullYear(2025);
+  targetDate.setMonth(8); // September (0-indexed)
+  targetDate.setDate(2);
+  targetDate.setHours(13);
+  targetDate.setMinutes(10);
+  targetDate.setSeconds(0);
+  
+  const now = new Date();
+  const diff = targetDate.getTime() - now.getTime();
+
+  if (diff <= 0) {
+    document.getElementById("timer").innerHTML = "Time's up!";
+    return;
+  }
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((diff / (1000 * 60)) % 60);
+  const seconds = Math.floor((diff / 1000) % 60);
+
+  document.getElementById("timer").innerHTML =
+    `<span>${days}d</span> <span>${hours}h</span> 
+     <span>${minutes}m</span> <span>${seconds}s</span>`;
+}
+
+setInterval(updateCountdown, 1000);
+updateCountdown();
+</script>
+
+</body>
+</html>
