@@ -3,214 +3,90 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ATL & PVR Flipboard Countdown</title>
-
-<!-- Load SolariBoard font from local file -->
+<title>ATL & PVR Countdowns</title>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
 <style>
-@font-face {
-  font-family: 'SolariBoard';
-  src: url('SolariBoard.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-}
-
-body {
-  font-family: 'SolariBoard', monospace;
-  background: #111;
-  color: #fff;
-  text-align: center;
-  padding: 30px;
-}
-
-.countdown-container {
-  margin-bottom: 50px;
-}
-
-.label {
-  font-size: 2em;
-  margin-bottom: 15px;
-}
-
-.flip-clock {
-  display: inline-flex;
-  gap: 5px;
-  justify-content: center;
-}
-
-.flip-digit {
-  position: relative;
-  width: 60px;      /* Adjusted width for font proportions */
-  height: 90px;     /* Adjusted height for font proportions */
-  perspective: 1000px;
-  background: #000;
-  border-radius: 4px;
-  overflow: hidden;
-  color: #ffcc00;
-  font-size: 3em;   /* Larger font size for better readability */
-  font-weight: bold;
-  text-align: center;
-  box-shadow: inset 0 -2px 5px rgba(0,0,0,0.7), inset 0 2px 5px rgba(255,255,255,0.05);
-}
-
-.digit-top,
-.digit-bottom {
-  position: absolute;
-  width: 100%;
-  height: 50%;
-  overflow: hidden;
-  background: #000;
-  color: #ffcc00;
-  text-shadow: 0 0 5px rgba(255,204,0,0.7);
-  font-family: 'SolariBoard', monospace;
-}
-
-.digit-top {
-  top: 0;
-  border-bottom: 1px solid #333;
-  line-height: 45px;
-}
-
-.digit-bottom {
-  bottom: 0;
-  border-top: 1px solid #333;
-  line-height: 45px;
-}
-
-.digit-flip-front,
-.digit-flip-back {
-  position: absolute;
-  width: 100%;
-  height: 50%;
-  left: 0;
-  background: #000;
-  color: #ffcc00;
-  overflow: hidden;
-  text-shadow: 0 0 5px rgba(255,204,0,0.7);
-  backface-visibility: hidden;
-  font-family: 'SolariBoard', monospace;
-}
-
-.digit-flip-front {
-  top: 0;
-  transform-origin: bottom;
-}
-
-.digit-flip-back {
-  bottom: 0;
-  transform-origin: top;
-}
-
-.flip {
-  animation: flipAnim 0.5s forwards;
-}
-
-@keyframes flipAnim {
-  0% { transform: rotateX(0); }
-  100% { transform: rotateX(-90deg); }
-}
+  body {
+    font-family: 'Bungee', cursive;
+    background: #222;
+    color: #fff;
+    text-align: center;
+    margin-top: 50px;
+  }
+  .countdown-container {
+    margin-bottom: 40px;
+  }
+  .label {
+    font-size: 2em;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.4);
+  }
+  .ATL {
+    background: linear-gradient(to right, #4facfe, #00f2fe);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .PVR {
+    background: linear-gradient(to right, #fbc2eb, #a6c1ee);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .countdown {
+    font-size: 2em;
+    background: rgba(0,0,0,0.6);
+    padding: 20px;
+    display: inline-block;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    transition: transform 0.2s ease-in-out;
+  }
+  .countdown:hover {
+    transform: scale(1.05);
+  }
+  .countdown span {
+    display: inline-block;
+    min-width: 70px;
+  }
 </style>
 </head>
 <body>
 
 <div class="countdown-container">
-  <div class="label">ATL ✈️</div>
-  <div class="flip-clock" id="timerATL"></div>
+  <div class="label ATL">ATL ✈️</div>
+  <div class="countdown" id="timerATL">Loading...</div>
 </div>
 
 <div class="countdown-container">
-  <div class="label">PVR 🌴🍹</div>
-  <div class="flip-clock" id="timerPVR"></div>
+  <div class="label PVR">PVR 🌴🍹</div>
+  <div class="countdown" id="timerPVR">Loading...</div>
 </div>
 
 <script>
-// Create a flip digit element
-function createDigit(num) {
-  const digit = document.createElement('div');
-  digit.className = 'flip-digit';
-  digit.dataset.value = num;
-
-  digit.innerHTML = `
-    <div class="digit-top">${num}</div>
-    <div class="digit-bottom">${num}</div>
-  `;
-  return digit;
-}
-
-// Render the flip clock
-function renderClock(containerId, values) {
-  const container = document.getElementById(containerId);
-  if (!container.children.length) {
-    values.forEach(v => container.appendChild(createDigit(v)));
-  } else {
-    values.forEach((v, i) => {
-      const digit = container.children[i];
-      if (digit.dataset.value !== v) {
-        flipTo(digit, v);
-      }
-    });
-  }
-}
-
-// Flip animation
-function flipTo(digit, newNumber) {
-  const oldNumber = digit.dataset.value;
-  digit.dataset.value = newNumber;
-
-  const top = digit.querySelector('.digit-top');
-  const bottom = digit.querySelector('.digit-bottom');
-
-  const flipFront = document.createElement('div');
-  flipFront.className = 'digit-flip-front flip';
-  flipFront.textContent = oldNumber;
-
-  const flipBack = document.createElement('div');
-  flipBack.className = 'digit-flip-back';
-  flipBack.textContent = newNumber;
-
-  flipFront.addEventListener('animationend', () => {
-    top.textContent = newNumber;
-    bottom.textContent = newNumber;
-    flipFront.remove();
-    flipBack.remove();
-  });
-
-  digit.appendChild(flipFront);
-  digit.appendChild(flipBack);
-}
-
-// Format time values
-function formatTime(diff) {
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-  const mins = Math.floor((diff / (1000 * 60)) % 60);
-  const secs = Math.floor((diff / 1000) % 60);
-
-  return [
-    ...String(days).padStart(2,'0'),
-    ...String(hours).padStart(2,'0'),
-    ...String(mins).padStart(2,'0'),
-    ...String(secs).padStart(2,'0')
-  ];
-}
-
-// Update countdown
-function updateCountdown(containerId, targetDate) {
+function updateCountdown(targetId, targetYear, targetMonth, targetDay, targetHour, targetMinute) {
   const now = new Date();
-  const diff = targetDate - now;
-
+  const targetDate = new Date(targetYear, targetMonth, targetDay, targetHour, targetMinute, 0);
+  
+  const diff = targetDate.getTime() - now.getTime();
+  let timerEl = document.getElementById(targetId);
+  
   if (diff <= 0) {
-    renderClock(containerId, ['0','0','0','0','0','0','0','0']);
+    timerEl.innerHTML = "Time's up!";
     return;
   }
 
-  const formatted = formatTime(diff);
-  renderClock(containerId, formatted);
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((diff / (1000 * 60)) % 60);
+  const seconds = Math.floor((diff / 1000) % 60);
+
+  timerEl.innerHTML =
+    `<span>${days}d</span> <span>${hours}h</span> 
+     <span>${minutes}m</span> <span>${seconds}s</span>`;
 }
 
-// Start timers
 setInterval(() => {
-  updateCountdown('timerATL', new Date('2025-09-01T13:48:00-04:00'));
-  updateCountdown('timerPVR', new Date('2025-09-02T13:10:00-04:00'));
+  updateCountdown("timerATL", 2025, 8, 1, 9, 48);
+  updateCountdown("timerPVR", 2025, 8, 2, 13, 10);
 }, 1000);
 </script>
 
