@@ -1,60 +1,8 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Matthew Bostic</title>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet">
-  <style>
-    html,body{
-      height:100%;
-      margin:0;
-    }
-    body{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:#0b0c10;
-      color:#e7e9ee;
-      font-family: Inter, sans-serif;
-      overflow:hidden;
-    }
-    h1{
-      font-size: clamp(32px, 6vw, 72px);
-      font-weight:600;
-      margin:0;
-      position:absolute;
-      transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
-      pointer-events:none;
-    }
-  </style>
-</head>
-<body>
-  <h1 id="name">Matthew Bostic</h1>
+<h2>Live Bambu H2D Printer Cam</h2>
 
-  <script>
-    const name = document.getElementById('name');
-    const body = document.body;
-    const rect = () => name.getBoundingClientRect();
-
-    body.addEventListener('mousemove', (e) => {
-      const r = rect();
-      const centerX = r.left + r.width/2;
-      const centerY = r.top + r.height/2;
-      const dx = e.clientX - centerX;
-      const dy = e.clientY - centerY;
-      const dist = Math.sqrt(dx*dx + dy*dy);
-
-      if(dist < 120){
-        const angle = Math.atan2(dy, dx);
-        const moveX = Math.cos(angle) * -80;
-        const moveY = Math.sin(angle) * -80;
-        name.style.transform = `translate(${moveX}px, ${moveY}px)`;
-      } else {
-        name.style.transform = 'translate(0,0)';
-      }
-    });
-  </script>
-</body>
-</html>
+<iframe
+    src="https://player.twitch.tv/?channel=twucky&parent=matthewbostic.com"
+    height="720"
+    width="1280"
+    allowfullscreen>
+</iframe>
